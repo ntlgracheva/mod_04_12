@@ -8,7 +8,7 @@
     ["Вы хотите завершить игру?", "Do you want to leave the game?"],
     ["Счет игры: ", "Game score "],
     ["пользователь=", "user="],
-    ["компьютер=", "computer="]]
+    ["компьютер=", "computer="]];
   const gameRules = [
     {
       "камень": {
@@ -53,13 +53,13 @@
 
   //замена языка
   const lang = langChoice.toUpperCase() === "EN" || langChoice.toUpperCase() === "ENG" ? 1 : 0;
-  console.log(`langChoice = ${langChoice}`);
-  console.log(`lang = ${lang}`);
+  //console.log(`langChoice = ${langChoice}`);
+  //console.log(`lang = ${lang}`);
 
   let user = null;                     //вариант пользователя
   let computer = null;                 //вариант пользователя
-  console.log(`user = ${user}`);
-  console.log(`computer = ${computer}`);
+  //console.log(`user = ${user}`);
+  //console.log(`computer = ${computer}`);
 
   let compScore = 0;                          // счетчик баллов компьютера
   let userScore = 0                           // счетчик баллов пользователя
@@ -68,39 +68,8 @@
 
     //функция запроса варианта у пользователя
     const userInput = () => {
-
       let userText = prompt(gameText[0][lang]);
-      console.log(userText);
-
-      const inputCheck = (text) => {
-        //если пользователь ввел "отмена" = null, то выводим результат игры
-        if (text === null) {
-          let confirm = prompt(gameText[1][lang]);
-          if (confirm === null) { userInput(); }
-          else { console.log(gameText[2][lang] + gameText[3][lang] + userScore + "/" + gameText[4][lang] + compScore); }
-        }
-
-        let input = text.trim().toLowerCase();      //удаляем пробелы, приводим в нижний регистр
-        let inputLength = input.length;             //вычисляем длину строки, введенной пользователем
-        console.log(`input user = !!!!${input}`);
-        //если длина больше 0 (то есть пользователь ввел какие-то данные() то проверяем их       
-        if (inputLength > 0) {
-
-          //находим соответствие по первым введенным буквам
-          for (let i = 0; i < 3; i++) {
-            console.log(`figures[lang][i].startsWith(${input})  - ${figures[lang][i].startsWith(input)}`);
-            if (figures[lang][i].startsWith(input)) {
-              console.log(`!!!${figures[lang][i]}`);
-              return user = figures[lang][i]
-            }
-            //если соответствия нету, то нужно перезапросить ввод у пользователя
-            // ТУТ БАГ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          }
-        }
-        //если длина ввода пользователя 0, то повторяем запрос
-        if (inputLength === 0) { userInput() }
-
-      }
+      //console.log(userText);
       return user = inputCheck(userText);
     }
 
@@ -117,17 +86,55 @@
       return computer;
     }
 
+    //функция проверки ввода пользователем
+    const inputCheck = (text) => {
+
+      //если пользователь ввел "отмена" = null, то запрашиваем, уверен ли он 
+      if (text === null) {
+        let confirm = prompt(gameText[1][lang]);
+
+        //если выход отменен, то продолжаем игру
+        if (confirm === null) { return user = userInput(); }
+        //если выход подтвержден, то выводом результат
+        else { console.log(gameText[2][lang] + gameText[3][lang] + userScore + "/" + gameText[4][lang] + compScore) }
+      }
+
+      //если было введено какое-то значение
+      let input = text.trim().toLowerCase();      //удаляем пробелы, приводим в нижний регистр
+      let inputLength = input.length;             //вычисляем длину строки, введенной пользователем
+     // console.log(`input user = !!!!${input}`);
+
+
+
+      //если длина ввода пользователя 0, то повторяем запрос
+      if (inputLength === 0) { return user = userInput() }
+
+      //если длина больше 0 (то есть пользователь ввел какие-то данные() то проверяем их       
+      if (inputLength > 0) {
+        //находим соответствие по первым введенным буквам
+        for (let i = 0; i < 3; i++) {
+          //console.log(`${figures[lang][i]}.startsWith(${input})  - ${figures[lang][i].startsWith(input)}`);
+          if (figures[lang][i].startsWith(input)) {
+            //console.log(`!!!${figures[lang][i]}`);
+            return user = figures[lang][i]
+          }
+        }
+        //если соответствия нету, то нужно перезапросить ввод у пользователя
+        return user = userInput();
+      }
+
+    }
     user = userInput();
-    console.log(`input user = ${user}`);
+    //console.log(`input user = ${user}`);
 
     computer = computerInput();
-    console.log(`input computer = ${computer}`);
+    //console.log(`input computer = ${computer}`);
 
     userScore += gameRules[lang][user][computer] // считаем баллы пользователя
     compScore += gameRules[lang][computer][user] // считаем баллы компьютера
 
-    console.log(`userScore = ${userScore}`);
-    console.log(`compScore = ${compScore}`);
+    //console.log(`userScore = ${userScore}`);
+    //console.log(`compScore = ${compScore}`);
 
     return gameStart();
   };
