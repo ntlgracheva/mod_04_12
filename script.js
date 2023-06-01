@@ -1,7 +1,11 @@
 'use strict';
 const figures = [["камень", "ножницы", "бумага"], ["rock", "scissors", "paper"]];
-const gameText = [["Введите один из вариантов: камень, ножницы, бумага", "Please, enter your choice: rock, scissors, paper"],
-["Вы хотите завершить игру?", "Do you want to leave the game?"]]
+const gameText = [
+["Введите один из вариантов: камень, ножницы, бумага", "Please, enter your choice: rock, scissors, paper"],
+["Вы хотите завершить игру?", "Do you want to leave the game?"],
+["Счет игры: ", "Game score "],
+["пользователь=", "user="],
+["компьютер=", "computer="]]
 const gameRules = [
     {
         "камень": {
@@ -57,60 +61,68 @@ console.log(`computer = ${computer}`);
 let compScore = 0;                          // счетчик баллов компьютера
 let userScore = 0                           // счетчик баллов пользователя
 
+const gameStart = () => {
 
-//функция запроса варианта у пользователя
-const userInput = () => {
-    const userInput = prompt(gameText[0][lang]);
+    //функция запроса варианта у пользователя
+    const userInput = () => {
 
-    const inputCheck = (userInput) => {
-        let input = userInput.trim().toLowerCase(); //удаляем пробелы, приводим в нижний регистр
-        let inputLength = input.length;             //вычисляем длину строки, введенной пользователем
+        let userText = prompt(gameText[0][lang]);
+        console.log(userText);
 
-        //если длина больше 0 (то есть пользователь ввел какие-то данные() то проверяем их
-        if (inputLength > 0) {
-            // *** КАК ИЗБЕЖАТЬ ЦИКЛА????
-            for (let i = 0; i < 3; i++) {
-                console.log(`figures[lang][i].startsWith(input)  - ${figures[lang][i].startsWith(input)}`);
-                if (figures[lang][i].startsWith(input)) {
-                    console.log(`!!!${figures[lang][i]}`);
-                    return user = figures[lang][i]
-                }
-                // *** если введено неверное слово, то нужно возобновить цикл, а у меня  НЕ вызывается функция - userInput is not a function????
-                else { userInput() }
+        const inputCheck = (text) => {
+            //если пользователь ввел "отмена" = null, то выводим результат игры
+            if (text === null) {
+                let confirm = prompt(gameText[1][lang]);
+                if (confirm === null) { userInput(); }
+                else { console.log(gameText[2][lang] + gameText[3][lang] + userScore + "/" + gameText[4][lang] + compScore); }
             }
+
+            let input = text.trim().toLowerCase();      //удаляем пробелы, приводим в нижний регистр
+            let inputLength = input.length;             //вычисляем длину строки, введенной пользователем
+            console.log(`input user = !!!!${input}`);
+            //если длина больше 0 (то есть пользователь ввел какие-то данные() то проверяем их
+            if (inputLength > 0) {
+                for (let i = 0; i < 3; i++) {
+                    console.log(`figures[lang][i].startsWith(${input})  - ${figures[lang][i].startsWith(input)}`);
+                    if (figures[lang][i].startsWith(input)) {
+                        console.log(`!!!${figures[lang][i]}`);
+                        return user = figures[lang][i]
+                    }
+                }
+            }
+            //если длина ввода пользователя 0, то повторяем запрос
+            if (inputLength === 0) { userInput() }
+
         }
-        //если длина ввода пользователя 0, то выводим запрашиваем о завершении игры
-        let confirm = prompt(gameText[1][lang]);
-
-        //*** Как правильно обработать завершение игры? если пользователь ничего не введет (null) - выводим результат, а как обработать нажатие "отмены"?
-
+        return user = inputCheck(userText);
     }
 
-    return user = inputCheck(userInput);
-}
-
-//функция запроса варианта у компьютера
-const computerInput = () => {
-    const random = Math.floor(Math.random() * 9 + 1);
-    if (random <= 3) {
-        computer = figures[lang][0];
-    } else if (random <= 6) {
-        computer = figures[lang][1];
-    } else {
-        computer = figures[lang][2];
+    //функция запроса варианта у компьютера
+    const computerInput = () => {
+        const random = Math.floor(Math.random() * 9 + 1);
+        if (random <= 3) {
+            computer = figures[lang][0];
+        } else if (random <= 6) {
+            computer = figures[lang][1];
+        } else {
+            computer = figures[lang][2];
+        }
+        return computer;
     }
-    return computer;
+
+    user = userInput();
+    console.log(`input user = ${user}`);
+
+    computer = computerInput();
+    console.log(`input computer = ${computer}`);
+
+    userScore += gameRules[lang][user][computer] // считаем баллы пользователя
+    compScore += gameRules[lang][computer][user] // считаем баллы компьютера
+
+    console.log(`userScore = ${userScore}`);
+    console.log(`compScore = ${compScore}`);
+
+    return gameStart();
 }
 
-
-user = userInput();
-console.log(`input user = ${user}`);
-
-computer = computerInput();
-console.log(`input computer = ${computer}`);
-
-userScore += gameRules[lang].user.computer // считаем баллы пользователя
-compScore += gameRules[lang].computer.user // считаем баллы компьютера
-
-console.log(`userScore = ${userScore}`);
-console.log(`compScore = ${compScore}`);
+gameStart();
