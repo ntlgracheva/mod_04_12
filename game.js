@@ -11,7 +11,8 @@
     ["компьютер=", "computer="],
     ["Вы выиграли!", "You won!"],
     ["Компьютер выиграл!", "Computer won!"],
-    ["Ничья!", "Draw!"]];
+    ["Ничья!", "Draw!"],
+    ["Еще разок?", "One more time?"]];
   const gameRules = [
     {
       "камень": {
@@ -56,23 +57,24 @@
 
   //замена языка
   const lang = langChoice.toUpperCase() === "EN" || langChoice.toUpperCase() === "ENG" ? 1 : 0;
-  //console.log(`langChoice = ${langChoice}`);
-  //console.log(`lang = ${lang}`);
 
   let user = null;                     //вариант пользователя
-  let computer = null;                 //вариант пользователя
-  //console.log(`user = ${user}`);
-  //console.log(`computer = ${computer}`);
+  let computer = null;                 //вариант пользователя 
 
   let compScore = 0;                          // счетчик баллов компьютера
   let userScore = 0                           // счетчик баллов пользователя
 
   const gameStart = () => {
 
+    //функция вывода результата
+    const showResult = (userScore, compScore) => {
+      alert(gameText[2][lang] + `\n` + gameText[3][lang] + userScore + "/" + gameText[4][lang] + compScore)
+    }
+
     //функция запроса варианта у пользователя
     const userInput = () => {
       let userText = prompt(gameText[0][lang]);
-      //console.log(userText);
+
       return user = inputCheck(userText);
     }
 
@@ -98,14 +100,14 @@
 
         //если выход отменен, то продолжаем игру
         if (confirm === null) { return user = userInput(); }
+
         //если выход подтвержден, то выводом результат
-        else { alert(gameText[2][lang] + `\n` + gameText[3][lang] + userScore + "/" + gameText[4][lang] + compScore) }
+        else { return showResult(userScore, compScore) }
       }
 
       //если было введено какое-то значение
       let input = text.trim().toLowerCase();      //удаляем пробелы, приводим в нижний регистр
       let inputLength = input.length;             //вычисляем длину строки, введенной пользователем
-
 
       //если длина ввода пользователя 0, то повторяем запрос
       if (inputLength === 0) { return user = userInput() }
@@ -122,7 +124,6 @@
         //если соответствия нету, то нужно перезапросить ввод у пользователя
         return user = userInput();
       }
-
     }
     user = userInput();
     computer = computerInput();
@@ -134,13 +135,13 @@
     else if (pointUser < pointComp) { alert(`${gameText[3][lang]}${user}\n${gameText[4][lang]}${computer}\n` + `\t` + gameText[6][lang]) }
     else { alert(`${gameText[3][lang]}${user}\n${gameText[4][lang]}${computer}\n` + `\t` + gameText[7][lang]) }
 
-
+    let moreGame = confirm(gameText[8][lang]);
+    if (moreGame === false) { return showResult(userScore, compScore) }
     userScore += pointUser // считаем баллы пользователя
     compScore += pointComp // считаем баллы компьютера
 
     return gameStart();
   };
-
 
   window.RPS = gameStart;
 })();
