@@ -8,7 +8,10 @@
     ["Вы хотите завершить игру?", "Do you want to leave the game?"],
     ["Счет игры: ", "Game score "],
     ["пользователь=", "user="],
-    ["компьютер=", "computer="]];
+    ["компьютер=", "computer="],
+    ["Вы выиграли!", "You won!"],
+    ["Компьютер выиграл!", "Computer won!"],
+    ["Ничья!", "Draw!"]];
   const gameRules = [
     {
       "камень": {
@@ -96,14 +99,12 @@
         //если выход отменен, то продолжаем игру
         if (confirm === null) { return user = userInput(); }
         //если выход подтвержден, то выводом результат
-        else { console.log(gameText[2][lang] + gameText[3][lang] + userScore + "/" + gameText[4][lang] + compScore) }
+        else { alert(gameText[2][lang] + `\n` + gameText[3][lang] + userScore + "/" + gameText[4][lang] + compScore) }
       }
 
       //если было введено какое-то значение
       let input = text.trim().toLowerCase();      //удаляем пробелы, приводим в нижний регистр
       let inputLength = input.length;             //вычисляем длину строки, введенной пользователем
-     // console.log(`input user = !!!!${input}`);
-
 
 
       //если длина ввода пользователя 0, то повторяем запрос
@@ -113,9 +114,8 @@
       if (inputLength > 0) {
         //находим соответствие по первым введенным буквам
         for (let i = 0; i < 3; i++) {
-          //console.log(`${figures[lang][i]}.startsWith(${input})  - ${figures[lang][i].startsWith(input)}`);
+
           if (figures[lang][i].startsWith(input)) {
-            //console.log(`!!!${figures[lang][i]}`);
             return user = figures[lang][i]
           }
         }
@@ -125,16 +125,18 @@
 
     }
     user = userInput();
-    //console.log(`input user = ${user}`);
-
     computer = computerInput();
-    //console.log(`input computer = ${computer}`);
 
-    userScore += gameRules[lang][user][computer] // считаем баллы пользователя
-    compScore += gameRules[lang][computer][user] // считаем баллы компьютера
+    let pointUser = gameRules[lang][user][computer];
+    let pointComp = gameRules[lang][computer][user];
 
-    //console.log(`userScore = ${userScore}`);
-    //console.log(`compScore = ${compScore}`);
+    if (pointUser > pointComp) { alert(`${gameText[3][lang]}${user}\n${gameText[4][lang]}${computer}\n` + `\t` + gameText[5][lang]) }
+    else if (pointUser < pointComp) { alert(`${gameText[3][lang]}${user}\n${gameText[4][lang]}${computer}\n` + `\t` + gameText[6][lang]) }
+    else { alert(`${gameText[3][lang]}${user}\n${gameText[4][lang]}${computer}\n` + `\t` + gameText[7][lang]) }
+
+
+    userScore += pointUser // считаем баллы пользователя
+    compScore += pointComp // считаем баллы компьютера
 
     return gameStart();
   };
